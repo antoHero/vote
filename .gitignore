@@ -2,3 +2,7 @@ template/node_modules/
 admin/includes/db.php
 includes/db.php
 users/includes/db.php
+pages/
+vendors/
+images/
+documentation/
