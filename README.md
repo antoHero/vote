@@ -1,7 +1,1 @@
-# MajesticAdmin-Free-Bootstrap-Admin-Template
-
-Majestic Admin is a free bootstrap responsive admin template with an elegant design and well structured code.
-
-<h2>Demo</h2>
-
-[![N|Solid](preview.png)](http://www.urbanui.com/majestic/template/index.html)
+Online voting system for a particular school's department. Backend PHP, frontend Majestic Bootstrap admin template
