@@ -37,19 +37,6 @@
                       }
                     }
                   ?>
-                  <?php
-                  $position_id = $_GET['edit'];
-                    if(isset($_POST['update_position'])) {
-                      $position_name = mysqli_real_escape_string($connection, $_POST['name']);
-                      $update_query = "UPDATE position SET name = '$position_name' WHERE id ='$position_id' ";
-                      if($update_query) {
-                        echo "<p class='alert alert-success'>Position updated successfully.</p>";
-                      } else {
-                        echo "<p class='alert alert-danger'>Error.</p>" . mysqli_error($connection);
-                      }
-                    }
-
-                  ?>
                   <form action="positions.php" method="post">
                     <div class="form-group">
                       <label for="exampleFormControlInput1"> Position </label>
@@ -71,7 +58,6 @@
                       <tr>
                         <th>ID</th>
                         <th>Position</th>
-                        <th>Action</th>
                         <th>Delete</th>
                       </tr>
                     </thead>
@@ -94,7 +80,6 @@
                       <tr>
                         <td><?php echo $position_id;?></td>
                         <td><?php echo $position_name;?></td>
-                        <td><a href="update_positions.php?edit=<?php echo $position_id;?>">Update</a></td>
                         <td><a href="positions.php?delete=<?php echo $position_id;?>">Delete</a></td>
                       </tr>
                       <?php } ?>

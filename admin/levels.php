@@ -62,7 +62,6 @@
                       <tr>
                         <th>ID</th>
                         <th>Level</th>
-                        <th>Action</th>
                         <th>Delete</th>
                       </tr>
                     </thead>
@@ -84,7 +83,6 @@
                       <tr>
                         <td><?php echo $level_id;?></td>
                         <td><?php echo $level_name;?></td>
-                        <td><button class="btn btn-success" type="submit" name="update">Update</button></td>
                         <td><a href="levels.php?delete=<?php echo $level_id;?>">Delete</a></td>
                       </tr>
                       <?php } ?>

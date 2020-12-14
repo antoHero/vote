@@ -1,48 +1,84 @@
+<?php include('db/config.php');?>
+
 <?php
 
-include "includes/functions.php";
+  session_start();
+  $emailErr = $passwordErr = "";
+  $email = $password = "";
 
-if (isset($_POST['submit'])) {
-    $matric = $_POST['matric'];
+  function cleanInput($data) {
+    $data = trim($data);
+    $data = stripcslashes($data);
+    $data = htmlspecialchars($data);
+
+    return $data;
+  }
+
+  if($_SERVER["REQUEST_METHOD"] == "POST") {
+    $email = cleanInput($_POST['email']);
     $password = $_POST['password'];
-
-    if(empty($matric)) {
-      echo "<p class='alert alert-danger text-center'>Matric Number is Required.</p>";
+    if(empty($email)) {
+      $emailErr = "Enter Email";
     }
-
     if(empty($password)) {
-      echo "<p class='alert alert-danger text-center'>Password is Required.</p>";
+      $passwordErr = "Enter Password";
     }
 
-    $sql = "SELECT * FROM users WHERE user_matric='$matric'";
-    $select_matric = mysqli_query($connection, $sql);
-    if(mysqli_num_rows($select_matric) == 1) {
-      //check if user is admin or voter
-      $logged_in_user = mysqli_fetch_assoc($select_matric);
-      if(password_verify($password, $logged_in_user['password'])) {
-        if($logged_in_user['user_role'] == 1){
-        $_SESSION['user'] = $logged_in_user['user_lastname'];
-        header("location: admin/index.php");
+    //check if details are correct
+    $sql = "SELECT * FROM users WHERE email = '$email'";
+    $result = mysqli_query($connection, $sql) or die(mysql_error());
+
+    if(mysqli_num_rows($result) == 1) {
+      $row = mysqli_fetch_assoc($result);
+      if(password_verify($password, $row['password'])) {
+        if($row['user_role'] == 1) {
+          session_start();
+          $_SESSION['id'] = $row['id'];
+          $_SESSION['user_role'] = $row['user_role'];
+          $_SESSION['user'] = $row['user_lastname'];
+
+          header('location: /admin');
+          exit();
         } else {
-          $_SESSION['user'] = $logged_in_user['user_lastname'];
-          //$_SESSION['user'] = $logged_in_user['user_lastname'];
-          header("location: users/results.php");
-        }
+          session_start();
+          $_SESSION['id'] = $row['id'];
+          $_SESSION['user_role'] = $row['user_role'];
+          $_SESSION['user'] = $row['user_lastname'];
+          $otp = rand(100, 999);
+          $from = 'antoakay@gmail.com';
+
+          $headers = 'MIME-Version: 1.0' . '\r\n';
+          $headers .= 'Content-type:text\html;charset=UTF-8' . '\r\n';
+          $headers .= 'From: antoakay@gmail.com' . '\r\n';
+          $messageBody = "Your OTP is: " . $otp;
+          $messageBody = wordwrap($messageBody, 70);
+          $subject = "One Time Password";
+          $mailStatus = mail($email, $subject, $messageBody, $headers);
+
+
+          if($mailStatus == 1) {
+            $insert = "INSERT INTO authentication(otp, expired, created_at) VALUES('".$otp."', 0, '".date('Y:m:d H:i:s')."')";
+            $query = mysqli_query($connection, $insert);
+            $insertId = mysqli_insert_id($connection);
+            if(!empty($insertId)) {
+              header('location: authenticate.php');
+            }
+          }
+        }  
       } else {
-        echo "<p class='alert alert-danger text-center'>Password is Incorrect.</p>";
+        echo "<p class='alert alert-danger'>Incorrect Password</p>";
       }
       
-      
     } else {
-      echo "<p class='alert alert-danger text-center'>Wrong Matric Number/Password Combination.</p>";
+      echo "<p class='alert alert-danger'>Invalid Email/Password Combination</p>";
     }
 
-    
-    }
-
+  }
 
 
 ?>
+
+<!--  -->
 <link href="http://fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,400,600"
         rel="stylesheet">
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
@@ -85,12 +121,12 @@ if (isset($_POST['submit'])) {
 </style>
 <title>Login</title>
 <div class="main" style="padding-top: 100px;">
-    <form class="form-signin" action="login.php" method="post">
+    <form class="form-signin" action="" method="post">
   
       <h1 class="h3 mb-3 font-weight-normal text-center">CSC VOTES</h1>
             <p class="text-center">Sign in to your account</p>
-      <label for="matric" class="sr-only">Matric Number</label>
-      <input type="text" id="inputEmail" name="matric" class="form-control" placeholder="Matric Number">
+      <label for="matric" class="sr-only">Phone Number</label>
+      <input type="email" id="inputEmail" name="email" class="form-control" placeholder="Email Address">
       <label for="inputPassword" class="sr-only">Password</label>
       <input type="password" id="inputPassword" name="password" class="form-control" placeholder="Password">
       <div class="checkbox mb-3">
