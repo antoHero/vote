@@ -65,7 +65,8 @@
 
                       //if everything is okay
                       else {
-                        if(move_uploaded_file($_FILES['post_image']['tmp_name'], $image)) {
+                        $img_url = "images";
+                        if(move_uploaded_file($_FILES['post_image']['tmp_name'], $img_url)) {
                           $insert = "INSERT INTO posts(post_content, post_title, post_image, postedOn) ";
                           $insert .= "VALUES('$content', '$title', '$image', '$postedOn')";
                           $save = mysqli_query($connection, $insert);

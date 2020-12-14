@@ -18,9 +18,11 @@
 <h6 class="border-bottom border-gray pb-2 mb-0 page-title">Vote Here</h6> 
 <br>
 <div class="container">
-  <div class="row">      
+  <div class="row">  
+     
       <?php
         session_start();
+        global $p_id;
         $limit = 1;
         if(isset($_SESSION['user'])) {
           $user = $_SESSION['user'];
@@ -32,7 +34,7 @@
           $row = mysqli_fetch_assoc($select_voter);
           
         }
-
+        
         $p_id =  $_GET['vote'];
         //echo $p_id;       
 
@@ -43,53 +45,44 @@
         
 
         //$user_id = "null";
-
-        if(empty($name)) {
-          echo "<p class='alert alert-danger text-center'>Select a candidate</p>";
-        } else if($voter_count >= $limit) {
+        if($voter_count >= $limit) {
           echo "<p class='alert alert-danger text-center'>Error, You cannot vote for this position more than once, <b>$user</b></p>";
+           
         }
           else {
           $sql = "INSERT INTO votes(candidate_name, position_id, user) VALUES('$name', '$position_id', '$user')";
           $query = mysqli_query($connection, $sql);
            
           if($query) {
-            echo "<p class='alert alert-success text-center'>You have voted for $name.</p>";
+            echo "<p class='alert alert-success text-center'>You have voted for $name.</p><br><br><br>";
             echo "<br>";
             echo "<a href='results.php'><< View Results</a>";
           } else {
-            echo "<p class='alert alert-danger text-center'>Query Failed!!!!</p>" . mysqli_error($connection);
+            echo "<p class='alert alert-danger text-center'>Query Failed!!!!</p><br><br><br>" . mysqli_error($connection);
           }
         }
       }
 
-
-
       ?>
-      <?php 
-        
 
+      <?php 
         $sql = "SELECT * FROM candidates WHERE position_id = '$p_id'";
         $get_postion = mysqli_query($connection, $sql);
-        if(mysqli_num_rows($get_postion) < 1) {
+        if(mysqli_num_rows($get_postion) < $limit) {
+          echo "<p></p>";
           echo "<p class='alert alert-danger text-center'>No candidates for this position.</p>";
         }
-        // $row = mysqli_fetch_assoc($get_postion);
-        //   $id = $row['id'];
-        //   $manifesto = $row['bio'];
-        //   $firstname = $row['firstname'];
-        //   $image = $row['image'];
-        //   $matric = $row['matric'];
-        //   $lastname = $row['lastname'];
-        //   $name = $firstname . ' ' . $lastname;
-        while($row = mysqli_fetch_assoc($get_postion)) {
-                $user_id = $row['id'];
-                $firstname = $row['firstname'];
-                $image = $row['image'];
-                $matric = $row['matric'];
-                $lastname = $row['lastname'];
-                $manifesto = $row['bio'];
-                $name = $firstname . ' ' . $lastname;
+         else {     
+          $sql = "SELECT * FROM candidates WHERE position_id = '$p_id'";
+          $get_postion = mysqli_query($connection, $sql);
+          while($row = mysqli_fetch_assoc($get_postion)) {
+            $user_id = $row['id'];
+            $firstname = $row['firstname'];
+            $image = $row['image'];
+            $matric = $row['matric'];
+            $lastname = $row['lastname'];
+            $manifesto = $row['bio'];
+            $name = $firstname . ' ' . $lastname;
               
         
           ?>
@@ -99,7 +92,6 @@
                   <img src="http://localhost:8888/vote/images/<?php echo $image;?>" class="card-img-top" alt="<?php echo $name;?>" style="height: 250px;">
                   <div class="card-body">
                     <h5 class="card-title"><?php echo $name;?></h5>
-                    <p class="card-text"><?php echo substr($manifesto, 0 , 50);?>.</p>
                   </div>
                   <div class="card-footer">
                     <small class="text-muted"><?php echo $matric;?></small>
@@ -113,33 +105,9 @@
                 <br> <p></p>
                 
               </form>
-              <a type="" href="" class="text-center"  data-toggle="modal" data-target="#exampleModalLong">View Manifesto</a>
+              <a type="" href="manifesto.php?bio=<?php echo $user_id;?>&pos=<?php echo $p_id;?>" class="text-center">View Manifesto</a>
           </div>
-          <!-- Modal -->
-            <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
-              <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle"><?php echo $lastname?>'s Manifesto</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                      <span aria-hidden="true">&times;</span>
-                    </button>
-                  </div>
-                  <div class="modal-body">
-                    
-                    <?php echo $lastname?>'s Manifesto
-                    <?php
-                      echo substr($manifesto, 0 , 200);
-                     
-                     ?>
-                  </div>
-                  <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                  </div>
-                </div>
-              </div>
-            </div>
-        <?php } ?>
+        <?php } } ?>
                   
           
           
