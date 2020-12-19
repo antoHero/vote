@@ -1,7 +1,7 @@
 <?php ob_start(); 
-  session_start();
+  // session_start();
 
-  $_SESSION['user'];
+  // $_SESSION['user'];
 
 ?>
 <!DOCTYPE html>

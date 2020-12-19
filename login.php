@@ -1,5 +1,10 @@
 <?php include('db/config.php');?>
-
+<?php  
+ // Include PHPMailer file   
+   require 'PHPMailerAutoload.php';  
+   $mail = new PHPMailer(true);
+ ?> 
+ 
 <?php
 
   session_start();
@@ -45,18 +50,36 @@
           $_SESSION['user_role'] = $row['user_role'];
           $_SESSION['user'] = $row['user_lastname'];
           $otp = rand(100, 999);
-          $from = 'antoakay@gmail.com';
 
-          $headers = 'MIME-Version: 1.0' . '\r\n';
-          $headers .= 'Content-type:text\html;charset=UTF-8' . '\r\n';
-          $headers .= 'From: antoakay@gmail.com' . '\r\n';
-          $messageBody = "Your OTP is: " . $otp;
-          $messageBody = wordwrap($messageBody, 70);
-          $subject = "One Time Password";
-          $mailStatus = mail($email, $subject, $messageBody, $headers);
+          $mail->SMTPDebug = 2;                                  // Enable verbose debug output  
+           $mail->isSMTP();                                       // Set mailer to use SMTP  
+           $mail->Host = 'smtp.gmail.com;';                       // Specify main and backup SMTP servers  
+           $mail->SMTPAuth = false;                                // Enable SMTP authentication  
+           $mail->Username = 'antoakay@gmail.com';               // your SMTP username  
+           $mail->Password = '4HGAlone?';                      // your SMTP password  
+           $mail->SMTPSecure = 'tls';                             // Enable TLS encryption, `ssl` also accepted  
+           $mail->Port = 587;                                     // TCP port to connect to  
+           $mail->setFrom('antoakay@gmail.com', 'Akoke Anto');  
+           $mail->addAddress($email);                 // Name is optional  
+           // $mail->addReplyTo('info@example.com', 'Information');  
+           // $mail->addCC('cc@example.com');                        // set your CC email address  
+            // $mail->addBCC('bcc@example.com');                      // set your BCC email address  
+           // $mail->isHTML(true);                                   // Set email format to HTML  
+           $mail->Subject = 'Your OTP';  
+           $mail->Body  = 'Your OTP is !</b>' . $otp . '</b>';  
+           
+          // $from = 'antoakay@gmail.com';
+
+          // $headers =  'MIME-Version: 1.0' . "\r\n"; 
+          // $headers .= 'From: Akoke Anto <antoakay@gmail.com>' . "\r\n";
+          // $headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n"; 
+          // $messageBody = "Your OTP is: " . $otp;
+          // $messageBody = wordwrap($messageBody, 70);
+          // $subject = "One Time Password";
+          // $mailStatus = mail($email, $subject, $messageBody, $headers);
 
 
-          if($mailStatus == 1) {
+          if($mail->send()) {
             $insert = "INSERT INTO authentication(otp, expired, created_at) VALUES('".$otp."', 0, '".date('Y:m:d H:i:s')."')";
             $query = mysqli_query($connection, $insert);
             $insertId = mysqli_insert_id($connection);

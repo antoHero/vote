@@ -1,5 +1,6 @@
 <?php include "includes/header.php";?>
-<?php include 'includes/db.php';
+<?php include('db/config.php');?>
+<?php 
   
   //var_dump($connection);
   $target_dir = "images/";
@@ -8,13 +9,13 @@
     $lastname = mysqli_real_escape_string($connection, $_POST['lastname']);
     $matric = mysqli_real_escape_string($connection, $_POST['matric']);
     $email = mysqli_real_escape_string($connection, $_POST['email']);
-    $phone = mysqli_real_escape_string($connection, $_POST['phone']);
+    // $phone = mysqli_real_escape_string($connection, $_POST['phone']);
     $user_role = $_POST['user_role'];
     $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
     $password2 = $_POST['password_2'];
-    $image = $target_dir . basename($_FILES['image']['name']);
-    $uploadOk = 1;
-    $imageFileType = strtolower(pathinfo($image, PATHINFO_EXTENSION));
+    // $image = $target_dir . basename($_FILES['image']['name']);
+    // $uploadOk = 1;
+    // $imageFileType = strtolower(pathinfo($image, PATHINFO_EXTENSION));
     
     $sql = "SELECT * FROM users WHERE user_matric = '$matric'";
     $select_user = mysqli_query($connection, $sql);
@@ -25,7 +26,7 @@
 
     else {
       // echo "string";
-      $insert = "INSERT INTO users(password, user_firstname, user_lastname, user_matric, email, user_role, phone) VALUES('$password', '$firstname', '$lastname', '$matric', '$email', '$user_role', '$phone')";
+      $insert = "INSERT INTO users(password, user_firstname, user_lastname, user_matric, email, user_role) VALUES('$password', '$firstname', '$lastname', '$matric', '$email', '$user_role')";
       // $insert .= "VALUES('$password', '$firstname', '$lastname', '$matric', '$user_role')";
       $register = mysqli_query($connection, $insert);
       //var_dump($register);
@@ -77,9 +78,7 @@
                 </div>
                 <div class="form-group col-md-12">
                   <input type="password" class="form-control" name="password_2" id="password" placeholder="Confirm Password">
-                <div class="form-group col-md-12">
-                  <input type="text" class="form-control" name="phone" id="password" placeholder="Phone Number">
-                </div>
+                
                 </div>
               </div>
                 
