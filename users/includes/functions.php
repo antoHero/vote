@@ -1,4 +1,4 @@
-<?php include '../../includes/db/php';?>
+<?php require_once('config.php');?>
 
 <?php
 function showAllLevels() {

@@ -36,25 +36,26 @@
     if(mysqli_num_rows($result) == 1) {
       $row = mysqli_fetch_assoc($result);
       if(password_verify($password, $row['password'])) {
+       
         if($row['user_role'] == 1) {
-          session_start();
-          $_SESSION['id'] = $row['id'];
+          
+          $_SESSION['id'] = $row['user_id'];
           $_SESSION['user_role'] = $row['user_role'];
           $_SESSION['user'] = $row['user_lastname'];
 
           header('location: /admin');
           exit();
         } else {
-          session_start();
-          $_SESSION['id'] = $row['id'];
+          // session_start();
+          $_SESSION['id'] = $row['user_id'];
           $_SESSION['user_role'] = $row['user_role'];
           $_SESSION['user'] = $row['user_lastname'];
           $otp = rand(100, 999);
 
-          $mail->SMTPDebug = 2;                                  // Enable verbose debug output  
+          $mail->SMTPDebug = 0;                                  // Enable verbose debug output  
            $mail->isSMTP();                                       // Set mailer to use SMTP  
            $mail->Host = 'smtp.gmail.com;';                       // Specify main and backup SMTP servers  
-           $mail->SMTPAuth = false;                                // Enable SMTP authentication  
+           $mail->SMTPAuth = true;                                // Enable SMTP authentication  
            $mail->Username = 'antoakay@gmail.com';               // your SMTP username  
            $mail->Password = '4HGAlone?';                      // your SMTP password  
            $mail->SMTPSecure = 'tls';                             // Enable TLS encryption, `ssl` also accepted  
@@ -79,14 +80,29 @@
           // $mailStatus = mail($email, $subject, $messageBody, $headers);
 
 
-          if($mail->send()) {
-            $insert = "INSERT INTO authentication(otp, expired, created_at) VALUES('".$otp."', 0, '".date('Y:m:d H:i:s')."')";
+           if($mail->send()) {
+            $date_added = date('Y:m:d H:i:s');
+            // echo $connection;
+            $insert = "INSERT INTO authenticate(otp, expired, created_at) VALUES('$otp',0,'$date_added')";
             $query = mysqli_query($connection, $insert);
-            $insertId = mysqli_insert_id($connection);
-            if(!empty($insertId)) {
-              header('location: authenticate.php');
-            }
-          }
+            header('location: authenticate.php');
+            // $insert = "INSERT INTO authentication(otp, expired, created_at) VALUES('".$otp."', 0, '".date('Y:m:d H:i:s')."')";
+            // $query = mysqli_query($connection, $insert);
+            // $insertId = mysqli_insert_id($connection);
+            // echo "<script>window.location('authenticate.php')</script>";
+            
+              
+            
+           }
+
+          // if($mail->send()) {
+          //   $insert = "INSERT INTO authentication(otp, expired, created_at) VALUES('".$otp."', 0, '".date('Y:m:d H:i:s')."')";
+          //   $query = mysqli_query($connection, $insert);
+          //   $insertId = mysqli_insert_id($connection);
+          //   if(!empty($insertId)) {
+          //     header('location: authenticate.php');
+          //   }
+          // }
         }  
       } else {
         echo "<p class='alert alert-danger'>Incorrect Password</p>";

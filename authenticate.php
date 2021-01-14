@@ -23,11 +23,11 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     //check if otp is correct
-    $sql = "SELECT * FROM authentication WHERE otp = '$otp' AND expired !=1";
+    $sql = "SELECT * FROM authenticate WHERE otp = '$otp' AND expired != 1";
     $result = mysqli_query($connection, $sql);
-    $count = mysqli_num_rows($result);
-    if(!empty($count)) {
-      $update = "UPDATE authentication SET expired=1 WHERE otp='$otp'";
+    // $count = mysqli_num_rows($result);
+    if(mysqli_num_rows($result) > 0) {
+      $update = "UPDATE authenticate SET expired=1 WHERE otp='$otp'";
       $query = mysqli_query($connection, $update);
 
       if($query) {
