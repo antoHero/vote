@@ -50,11 +50,11 @@
 
                         while($row = mysqli_fetch_assoc($select_postions)) {
                           $user_id = $row['user_id'];
-                          $username = $row['username'];
+                          // $username = $row['username'];
                           $user_firstname = $row['user_firstname'];
                           $user_lastname = $row['user_lastname'];
                           $user_matric = $row['user_matric'];
-                          $image = $row['user_image'];
+                          // $image = $row['user_image'];
                           $role = $row['user_role'];
 
                           ?>

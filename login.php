@@ -43,7 +43,7 @@
           $_SESSION['user_role'] = $row['user_role'];
           $_SESSION['user'] = $row['user_lastname'];
 
-          header('location: /admin');
+          header('location: admin/');
           exit();
         } else {
           // session_start();
@@ -56,8 +56,8 @@
            $mail->isSMTP();                                       // Set mailer to use SMTP  
            $mail->Host = 'smtp.gmail.com;';                       // Specify main and backup SMTP servers  
            $mail->SMTPAuth = true;                                // Enable SMTP authentication  
-           $mail->Username = 'example@gmail.com';               // your SMTP username  
-           $mail->Password = 'your gmail password';                      // your SMTP password  
+           $mail->Username = 'veeqanto@gmail.com';               // your SMTP username  
+           $mail->Password = 'antoakoke';                      // your SMTP password  
            $mail->SMTPSecure = 'tls';                             // Enable TLS encryption, `ssl` also accepted  
            $mail->Port = 587;                                     // TCP port to connect to  
            $mail->setFrom('antoakay@gmail.com', 'Akoke Anto');  

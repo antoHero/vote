@@ -21,12 +21,12 @@
   <div class="row">  
      
       <?php
-        session_start();
+        // session_start();
         global $p_id;
         $limit = 1;
         if(isset($_SESSION['user'])) {
           $user = $_SESSION['user'];
-          $id = $_SESSION['user_id'];
+          // $id = $_SESSION['user_id'];
 
           $sql = "SELECT * FROM votes WHERE user = '$user'";
           $select_voter = mysqli_query($connection, $sql);

@@ -7,7 +7,7 @@
 
   <div class="my-3 p-3 bg-white rounded shadow-sm">
     <?php
-      session_start();
+      // session_start();
 
       if(isset($_GET['view'])) {
           $result_id =  $_GET['view'];

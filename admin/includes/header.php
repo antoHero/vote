@@ -1,4 +1,4 @@
-<?php include "db.php";?>
+<?php include "../db/config.php";?>
 <?php ob_start(); 
   session_start();
   if(isset($_SESSION['user']) != 1) {
@@ -19,6 +19,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <title>Admin Page</title>
   <!-- plugins:css -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet">
   <link rel="stylesheet" href="../css/materialdesignicons.min.css">
   <link rel="stylesheet" href="../css/vendor.bundle.base.css">
   <!-- endinject -->
